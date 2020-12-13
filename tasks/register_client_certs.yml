@@ -6,3 +6,4 @@
   register:             mail_client_fingerprints
   connection:           local
   become:               'no'
+  changed_when:         False

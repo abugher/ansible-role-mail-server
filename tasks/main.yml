@@ -11,3 +11,7 @@
   with_items:           "{{ lines_in_main_config }}"
   loop_control:
     loop_var:           'line_spec'
+- include:              '../tasks/start_services.yml'
+- include:              '../tasks/restart_services.yml'
+  when:                 template_files_result.changed
+                        or lines_in_files_result.changed

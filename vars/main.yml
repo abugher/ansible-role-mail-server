@@ -16,8 +16,8 @@ lines_in_main_config:
     regexp:                     '^myhostname *='
   - line:                       "myorigin = {{ domain }}"
     regexp:                     '^myorigin *='
-  - line:                       "myhostname = {{ inventory_hostname }}, {{ inventory_hostname }}.{{ domain }}, localhost, localhost.{{ domain }}, localhost.localdomain"
-    regexp:                     '^myhostname *='
+  - line:                       "mydestinations = {{ inventory_hostname }}, {{ inventory_hostname }}.{{ domain }}, localhost, localhost.{{ domain }}, localhost.localdomain"
+    regexp:                     '^mydestinations *='
   - line:                       "smtpd_tls_security_level = encrypt"
     regexp:                     '^smtpd_tls_security_level *='
   - line:                       "smtpd_tls_ask_ccert = yes"
@@ -26,3 +26,7 @@ lines_in_main_config:
     regexp:                     '^relay_clientcerts *='
   - line:                       'smtpd_tls_fingerprint_digest = sha256'
     regexp:                     '^smtpd_tls_fingerprint_digest *='
+start_services:
+  - 'postfix'
+restart_services:
+  - 'postfix'
