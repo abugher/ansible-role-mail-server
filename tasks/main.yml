@@ -1,5 +1,7 @@
 ---
 - include:              '../tasks/install_packages.yml'
+- include:              'register_client_certs.yml'
+- include:              '../tasks/template_files.yml'
 - include:              '../tasks/lines_in_files.yml'
   vars:
     lines_in_files:

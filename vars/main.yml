@@ -1,8 +1,28 @@
 install_packages:
   - 'postfix'
+template_files:
+  - owner:                      'root'
+    group:                      'root'
+    mode:                       '0644'
+    src:                        'templates/conf/relay_clientcerts.j2'
+    dest:                       '/etc/postfix/relay_clientcerts'
 main_config:                    '/etc/postfix/main.cf'
 lines_in_main_config:
-  - line:                       "smtpd_tls_cert_file=/etc/ssl/certs/{{ inventory_hostname }}.pem"
-    regexp:                     '^smtpd_tls_cert_file='
-  - line:                       "smtpd_tls_key_file=/etc/ssl/private/{{ inventory_hostname }}.pem"
-    regexp:                     '^smtpd_tls_key_file='
+  - line:                       "smtpd_tls_cert_file = /etc/ssl/certs/{{ inventory_hostname }}.pem"
+    regexp:                     '^smtpd_tls_cert_file *='
+  - line:                       "smtpd_tls_key_file = /etc/ssl/private/{{ inventory_hostname }}.pem"
+    regexp:                     '^smtpd_tls_key_file *='
+  - line:                       "myhostname = {{ inventory_hostname }}.{{ domain }}"
+    regexp:                     '^myhostname *='
+  - line:                       "myorigin = {{ domain }}"
+    regexp:                     '^myorigin *='
+  - line:                       "myhostname = {{ inventory_hostname }}, {{ inventory_hostname }}.{{ domain }}, localhost, localhost.{{ domain }}, localhost.localdomain"
+    regexp:                     '^myhostname *='
+  - line:                       "smtpd_tls_security_level = encrypt"
+    regexp:                     '^smtpd_tls_security_level *='
+  - line:                       "smtpd_tls_ask_ccert = yes"
+    regexp:                     '^smtpd_tls_ask_ccert *='
+  - line:                       'relay_clientcerts = hash:/etc/postfix/relay_clientcerts'
+    regexp:                     '^relay_clientcerts *='
+  - line:                       'smtpd_tls_fingerprint_digest = sha256'
+    regexp:                     '^smtpd_tls_fingerprint_digest *='
