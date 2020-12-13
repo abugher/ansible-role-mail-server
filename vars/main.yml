@@ -1,2 +1,8 @@
 install_packages:
   - 'postfix'
+main_config:                    '/etc/postfix/main.cf'
+lines_in_main_config:
+  - line:                       "smtpd_tls_cert_file=/etc/ssl/certs/{{ inventory_hostname }}.pem"
+    regexp:                     '^smtpd_tls_cert_file='
+  - line:                       "smtpd_tls_key_file=/etc/ssl/private/{{ inventory_hostname }}.pem"
+    regexp:                     '^smtpd_tls_key_file='
