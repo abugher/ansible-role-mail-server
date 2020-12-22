@@ -6,6 +6,10 @@ template_files:
     mode:                       '0644'
     src:                        'templates/conf/relay_clientcerts.j2'
     dest:                       '/etc/postfix/relay_clientcerts'
+shell_commands_ignore_result:
+  - user:                       'root'
+    chdir:                      '/'
+    command:                    postmap /etc/postfix/relay_clientcerts
 main_config:                    '/etc/postfix/main.cf'
 lines_in_main_config:
   - line:                       "smtpd_tls_cert_file = /etc/ssl/certs/{{ inventory_hostname }}.pem"
@@ -26,6 +30,8 @@ lines_in_main_config:
     regexp:                     '^relay_clientcerts *='
   - line:                       'smtpd_tls_fingerprint_digest = sha256'
     regexp:                     '^smtpd_tls_fingerprint_digest *='
+  - line:                       'inet_protocols = ipv4'
+    regexp:                     '^inet_protocols *='
 start_services:
   - 'postfix'
 restart_services:

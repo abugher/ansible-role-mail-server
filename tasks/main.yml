@@ -2,6 +2,8 @@
 - include:              '../tasks/install_packages.yml'
 - include:              'register_client_certs.yml'
 - include:              '../tasks/template_files.yml'
+- include:              '../tasks/shell_commands_ignore_result.yml'
+  when:                 template_files_result.changed
 - include:              '../tasks/lines_in_files.yml'
   vars:
     lines_in_files:
