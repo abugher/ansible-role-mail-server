@@ -1,15 +1,67 @@
 install_packages:
   - 'postfix'
+  - 'opendkim'
+create_files:
+  - owner:                      'root'
+    group:                      'root'
+    mode:                       '0755'
+    state:                      'directory'
+    path:                       '/etc/ssl/public'
+  - owner:                      'root'
+    group:                      'root'
+    mode:                       '0755'
+    state:                      'directory'
+    path:                       '/etc/opendkim'
+install_files:
+  # I would prefer to just use the same host keys used by SSL web services,
+  # signed by my internal CA, but those are all 4096 bit, and DKIM should be
+  # restricted to 2048 bits.
+  - owner:                      'root'
+    group:                      'opendkim'
+    mode:                       '0640'
+    src:                        "../../sensitive_ansible/inventory/hosts/{{ inventory_hostname }}/files/dkim_keys/dkim_private.pem"
+    dest:                       "/etc/ssl/private/{{ inventory_hostname }}.dkim.key"
+  - owner:                      'opendkim'
+    group:                      'opendkim'
+    mode:                       '0644'
+    src:                        "../inventory/hosts/{{ inventory_hostname }}/files/dkim_keys/dkim_public.der.base64"
+    dest:                       "/etc/ssl/public/{{ inventory_hostname }}.dkim.key"
 template_files:
   - owner:                      'root'
     group:                      'root'
     mode:                       '0644'
     src:                        'templates/conf/relay_clientcerts.j2'
     dest:                       '/etc/postfix/relay_clientcerts'
+  - owner:                      'root'
+    group:                      'root'
+    mode:                       '0644'
+    src:                        'templates/conf/opendkim/keytable.j2'
+    dest:                       '/etc/opendkim/keytable'
+  - owner:                      'root'
+    group:                      'root'
+    mode:                       '0644'
+    src:                        'templates/conf/opendkim/signingtable.j2'
+    dest:                       '/etc/opendkim/signingtable'
 shell_commands_ignore_result:
   - user:                       'root'
     chdir:                      '/'
     command:                    postmap /etc/postfix/relay_clientcerts
+opendkim_conf:                  '/etc/opendkim.conf'
+lines_in_opendkim_conf:
+  - line:                       'Mode                    sv'
+    regexp:                     '^#{0,1} *Mode '
+  - line:                       'Socket                  inet:8891@localhost'
+    regexp:                     '^#{0,1} *Socket '
+  - line:                       "ReportAddress \"{{ domain }} Postmaster\""
+    regexp:                     '^#{0,1} *ReportAddress '
+  - line:                       "Domain                  {{ domain }}"
+    regexp:                     '^#{0,1} *Domain '
+  - line:                       'Selector                mail'
+    regexp:                     '^#{0,1} *Selector '
+  - line:                       'KeyTable                /etc/opendkim/keytable'
+    regexp:                     '^#{0,1} *KeyTable '
+  - line:                       'SigningTable            /etc/opendkim/signingtable'
+    regexp:                     '^#{0,1} *SigningTable '
 main_config:                    '/etc/postfix/main.cf'
 lines_in_main_config:
   - line:                       "smtpd_tls_cert_file = /etc/ssl/certs/{{ inventory_hostname }}.pem"
@@ -32,7 +84,11 @@ lines_in_main_config:
     regexp:                     '^smtpd_tls_fingerprint_digest *='
   - line:                       'inet_protocols = ipv4'
     regexp:                     '^inet_protocols *='
+  - line:                       'smtpd_milters = inet:127.0.0.1:8891'
+    regexp:                     '^smtpd_milters *='
+  - line:                       'non_smtpd_milters = inet:127.0.0.1:8891'
+    regexp:                     '^non_smtpd_milters *='
 start_services:
   - 'postfix'
-restart_services:
-  - 'postfix'
+  - 'opendkim'
+restart_services:               "{{ start_services }}"

@@ -1,19 +1,16 @@
 ---
 - include:              '../tasks/install_packages.yml'
+- include:              '../tasks/create_files.yml'
 - include:              'register_client_certs.yml'
+- include:              'configure_opendkim.yml'
+- include:              'configure_postfix.yml'
+- include:              '../tasks/install_files.yml'
 - include:              '../tasks/template_files.yml'
 - include:              '../tasks/shell_commands_ignore_result.yml'
   when:                 template_files_result.changed
-- include:              '../tasks/lines_in_files.yml'
-  vars:
-    lines_in_files:
-      - line:           "{{ line_spec.line }}"
-        regexp:         "{{ line_spec.regexp }}"
-        dest:           "{{ main_config }}"
-  with_items:           "{{ lines_in_main_config }}"
-  loop_control:
-    loop_var:           'line_spec'
 - include:              '../tasks/start_services.yml'
 - include:              '../tasks/restart_services.yml'
-  when:                 template_files_result.changed
-                        or lines_in_files_result.changed
+  when:                 install_files_result.changed
+                        or template_files_result.changed
+                        or configure_opendkim_result.changed
+                        or configure_postfix_result.changed
