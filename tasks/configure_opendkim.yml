@@ -1,10 +1,9 @@
 ---
-- include:              '../tasks/lines_in_files.yml'
-  vars:
-    lines_in_files:
-      - line:           "{{ line_spec.line }}"
-        regexp:         "{{ line_spec.regexp }}"
-        dest:           "{{ opendkim_conf }}"
+- lineinfile:
+    line:               "{{ line_spec.line }}"
+    regexp:             "{{ line_spec.regexp }}"
+    dest:               "{{ opendkim_conf }}"
+    state:              'present'
   with_items:           "{{ lines_in_opendkim_conf }}"
   loop_control:
     loop_var:           'line_spec'

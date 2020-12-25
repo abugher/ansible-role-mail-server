@@ -6,11 +6,6 @@ create_files:
     group:                      'root'
     mode:                       '0755'
     state:                      'directory'
-    path:                       '/etc/ssl/public'
-  - owner:                      'root'
-    group:                      'root'
-    mode:                       '0755'
-    state:                      'directory'
     path:                       '/etc/opendkim'
 install_files:
   # I would prefer to just use the same host keys used by SSL web services,
@@ -21,11 +16,6 @@ install_files:
     mode:                       '0640'
     src:                        "../../sensitive_ansible/roles/{{ role_name }}/files/dkim_keys/dkim_private.pem"
     dest:                       "/etc/ssl/private/{{ inventory_hostname }}.dkim.key"
-  - owner:                      'opendkim'
-    group:                      'opendkim'
-    mode:                       '0644'
-    src:                        "../inventory/hosts/{{ inventory_hostname }}/files/dkim_keys/dkim_public.der.base64"
-    dest:                       "/etc/ssl/public/{{ inventory_hostname }}.dkim.key"
 template_files:
   - owner:                      'root'
     group:                      'root'
@@ -49,45 +39,45 @@ shell_commands_ignore_result:
 opendkim_conf:                  '/etc/opendkim.conf'
 lines_in_opendkim_conf:
   - line:                       'Mode                    sv'
-    regexp:                     '^#{0,1} *Mode '
+    regexp:                     '^#{0,1} *Mode\s'
   - line:                       'Socket                  inet:8891@localhost'
-    regexp:                     '^#{0,1} *Socket '
-  - line:                       "ReportAddress \"{{ domain }} Postmaster\""
-    regexp:                     '^#{0,1} *ReportAddress '
+    regexp:                     '^#{0,1} *Socket\s'
+  - line:                       "ReportAddress           \"{{ domain }} Postmaster\""
+    regexp:                     '^#{0,1} *ReportAddress\s'
   - line:                       "Domain                  {{ domain }}"
-    regexp:                     '^#{0,1} *Domain '
+    regexp:                     '^#{0,1} *Domain\s'
   - line:                       'Selector                mail'
-    regexp:                     '^#{0,1} *Selector '
+    regexp:                     '^#{0,1} *Selector\s'
   - line:                       'KeyTable                /etc/opendkim/keytable'
-    regexp:                     '^#{0,1} *KeyTable '
+    regexp:                     '^#{0,1} *KeyTable\s'
   - line:                       'SigningTable            /etc/opendkim/signingtable'
-    regexp:                     '^#{0,1} *SigningTable '
+    regexp:                     '^#{0,1} *SigningTable\s'
 main_config:                    '/etc/postfix/main.cf'
 lines_in_main_config:
   - line:                       "smtpd_tls_cert_file = /etc/ssl/certs/{{ inventory_hostname }}.pem"
-    regexp:                     '^smtpd_tls_cert_file *='
+    regexp:                     '^#{0,1} *smtpd_tls_cert_file *='
   - line:                       "smtpd_tls_key_file = /etc/ssl/private/{{ inventory_hostname }}.pem"
-    regexp:                     '^smtpd_tls_key_file *='
+    regexp:                     '^#{0,1} *smtpd_tls_key_file *='
   - line:                       "myhostname = {{ inventory_hostname }}.{{ domain }}"
-    regexp:                     '^myhostname *='
+    regexp:                     '^#{0,1} *myhostname *='
   - line:                       "myorigin = {{ domain }}"
-    regexp:                     '^myorigin *='
-  - line:                       "mydestinations = {{ inventory_hostname }}, {{ inventory_hostname }}.{{ domain }}, localhost, localhost.{{ domain }}, localhost.localdomain"
-    regexp:                     '^mydestinations *='
+    regexp:                     '^#{0,1} *myorigin *='
+  - line:                       "mydestination = {{ domain }}, {{ inventory_hostname }}, {{ inventory_hostname }}.{{ domain }}, localhost, localhost.{{ domain }}, localhost.localdomain"
+    regexp:                     '^#{0,1} *mydestination *='
   - line:                       "smtpd_tls_security_level = encrypt"
-    regexp:                     '^smtpd_tls_security_level *='
+    regexp:                     '^#{0,1} *smtpd_tls_security_level *='
   - line:                       "smtpd_tls_ask_ccert = yes"
-    regexp:                     '^smtpd_tls_ask_ccert *='
+    regexp:                     '^#{0,1} *smtpd_tls_ask_ccert *='
   - line:                       'relay_clientcerts = hash:/etc/postfix/relay_clientcerts'
-    regexp:                     '^relay_clientcerts *='
+    regexp:                     '^#{0,1} *relay_clientcerts *='
   - line:                       'smtpd_tls_fingerprint_digest = sha256'
-    regexp:                     '^smtpd_tls_fingerprint_digest *='
+    regexp:                     '^#{0,1} *smtpd_tls_fingerprint_digest *='
   - line:                       'inet_protocols = ipv4'
-    regexp:                     '^inet_protocols *='
+    regexp:                     '^#{0,1} *inet_protocols *='
   - line:                       'smtpd_milters = inet:127.0.0.1:8891'
-    regexp:                     '^smtpd_milters *='
+    regexp:                     '^#{0,1} *smtpd_milters *='
   - line:                       'non_smtpd_milters = inet:127.0.0.1:8891'
-    regexp:                     '^non_smtpd_milters *='
+    regexp:                     '^#{0,1} *non_smtpd_milters *='
 start_services:
   - 'postfix'
   - 'opendkim'

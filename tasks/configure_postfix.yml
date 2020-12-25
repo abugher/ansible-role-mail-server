@@ -1,10 +1,9 @@
 ---
-- include:              '../tasks/lines_in_files.yml'
-  vars:
-    lines_in_files:
-      - line:           "{{ line_spec.line }}"
-        regexp:         "{{ line_spec.regexp }}"
-        dest:           "{{ main_config }}"
+- lineinfile:
+    line:               "{{ line_spec.line }}"
+    regexp:             "{{ line_spec.regexp }}"
+    dest:               "{{ main_config }}"
+    state:              'present'
   with_items:           "{{ lines_in_main_config }}"
   loop_control:
     loop_var:           'line_spec'
