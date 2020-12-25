@@ -65,6 +65,8 @@ lines_in_opendkim_conf:
     regexp:                     '^#{0,1} *InternalHosts\s'
   - line:                       'ExternalIgnoreList      /etc/opendkim/internalhosts'
     regexp:                     '^#{0,1} *ExternalIgnoreList\s'
+  - line:                       '#TrustAnchorFile         /usr/share/dns/root.key'
+    regexp:                     '^#{0,1} *TrustAnchorFile\s'
 main_config:                    '/etc/postfix/main.cf'
 lines_in_main_config:
   - line:                       "smtpd_tls_cert_file = /etc/ssl/certs/{{ inventory_hostname }}.pem"
