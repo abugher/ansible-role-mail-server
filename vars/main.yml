@@ -93,6 +93,10 @@ lines_in_main_config:
     regexp:                     '^#{0,1} *smtpd_milters *='
   - line:                       'non_smtpd_milters = inet:127.0.0.1:8891'
     regexp:                     '^#{0,1} *non_smtpd_milters *='
+master_config:                  '/etc/postfix/master.cf'
+lines_in_master_config:
+  - line:                       'submission inet n       -       y       -       -       smtpd'
+    regexp:                     '^#{0,1} *submission[ $]'
 start_services:
   - 'postfix'
   - 'opendkim'

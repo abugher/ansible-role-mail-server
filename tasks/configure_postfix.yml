@@ -7,4 +7,20 @@
   with_items:           "{{ lines_in_main_config }}"
   loop_control:
     loop_var:           'line_spec'
+  register:             configure_postfix_main_result
+
+- lineinfile:
+    line:               "{{ line_spec.line }}"
+    regexp:             "{{ line_spec.regexp }}"
+    dest:               "{{ master_config }}"
+    state:              'present'
+  with_items:           "{{ lines_in_master_config }}"
+  loop_control:
+    loop_var:           'line_spec'
+  register:             configure_postfix_master_result
+
+- debug:
+    msg:                'Register postfix configuration results.'
+  changed_when:         configure_postfix_main_result.changed
+                        or configure_postfix_master_result.changed
   register:             configure_postfix_result
