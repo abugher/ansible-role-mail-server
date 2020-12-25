@@ -1,5 +1,6 @@
 ---
 - include:              '../tasks/install_packages.yml'
+- include:              '../tasks/add_users_to_groups.yml'
 - include:              '../tasks/create_files.yml'
 - include:              'register_client_certs.yml'
 - include:              'configure_postfix.yml'
@@ -10,7 +11,8 @@
   when:                 template_files_result.changed
 - include:              '../tasks/start_services.yml'
 - include:              '../tasks/restart_services.yml'
-  when:                 install_files_result.changed
+  when:                 add_users_to_groups_result.changed
                         or template_files_result.changed
+                        or install_files_result.changed
                         or configure_opendkim_result.changed
                         or configure_postfix_result.changed
