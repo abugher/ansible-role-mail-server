@@ -1,0 +1,3 @@
+# openssl genrsa -out dkim_private.pem 2048
+# openssl rsa -in dkim_private.pem -pubout -outform der 2>/dev/null | openssl base64 -A
+dkim_public_key:                'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3nSwDSm4jtW8r3ZpZ1E3kiAKawQJ/19iGJu2nqA3s7P3WMNk+fMCNb3Yr/7PMjSOv7WOxbJVnboHz00Ad8mN+icRSeOwJIPX4pFl00ARUq6tEtxhhvoV8BP+nufMrDB+vtSpjBdw6WJ0cdDCU/iwqcKt9lvW0Sp0fogLLGvXzu0bkA/YSX0LDgzM4Fb3WZ/br9sGNQHR7mDZgFHpnq8zeL4dPVZxZyo5LA4IgC/WV5eQ+PP14C3xacBuEW1aMw7pqIIT8zUZwGMyJswYYG8n3ZHKOMV37C/glwJkbFoUW7cHNuRxyrKWbMoiBAQc/nfSOwfAHwNuymnrxf3mlhsjMQIDAQAB0'
