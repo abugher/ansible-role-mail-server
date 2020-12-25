@@ -63,7 +63,7 @@ lines_in_opendkim_conf:
     regexp:                     '^#{0,1} *SigningTable\s'
   - line:                       'InternalHosts           /etc/opendkim/internalhosts'
     regexp:                     '^#{0,1} *InternalHosts\s'
-  - line:                       'ExternalIgnoreList     /etc/opendkim/internalhosts'
+  - line:                       'ExternalIgnoreList      /etc/opendkim/internalhosts'
     regexp:                     '^#{0,1} *ExternalIgnoreList\s'
 main_config:                    '/etc/postfix/main.cf'
 lines_in_main_config:
