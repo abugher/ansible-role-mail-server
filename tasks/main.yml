@@ -9,6 +9,7 @@
 - include:              '../tasks/template_files.yml'
 - include:              '../tasks/shell_commands_ignore_result.yml'
   when:                 template_files_result.changed
+- include:              '../tasks/enable_services.yml'
 - include:              '../tasks/start_services.yml'
 - include:              '../tasks/restart_services.yml'
   when:                 add_users_to_groups_result.changed

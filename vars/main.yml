@@ -99,7 +99,8 @@ master_config:                  '/etc/postfix/master.cf'
 lines_in_master_config:
   - line:                       'submission inet n       -       y       -       -       smtpd'
     regexp:                     '^#{0,1} *submission[ $]'
-start_services:
+enable_services:
   - 'postfix'
   - 'opendkim'
+start_services:                 "{{ enable_services }}"
 restart_services:               "{{ start_services }}"
