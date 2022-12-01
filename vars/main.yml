@@ -51,7 +51,7 @@ lines_in_opendkim_conf:
     regexp:                     '^#{0,1} *Mode\s'
   - line:                       'Socket                  inet:8891@localhost'
     regexp:                     '^#{0,1} *Socket\s'
-  - line:                       "ReportAddress           \"{{ domain }} Postmaster\""
+  - line:                       "#ReportAddress           \"\""
     regexp:                     '^#{0,1} *ReportAddress\s'
   - line:                       "Domain                  {{ domain }}"
     regexp:                     '^#{0,1} *Domain\s'
@@ -67,7 +67,7 @@ lines_in_opendkim_conf:
     regexp:                     '^#{0,1} *SigningTable\s'
   - line:                       'InternalHosts           /etc/opendkim/internalhosts'
     regexp:                     '^#{0,1} *InternalHosts\s'
-  - line:                       '#ExternalIgnoreList      /etc/opendkim/internalhosts'
+  - line:                       'ExternalIgnoreList      /etc/opendkim/internalhosts'
     regexp:                     '^#{0,1} *ExternalIgnoreList\s'
   - line:                       '#TrustAnchorFile         /usr/share/dns/root.key'
     regexp:                     '^#{0,1} *TrustAnchorFile\s'
