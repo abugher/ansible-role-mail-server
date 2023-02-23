@@ -116,3 +116,4 @@ enable_services:
   - 'opendkim'
 start_services:                 "{{ enable_services }}"
 restart_services:               "{{ start_services }}"
+  - 'ssl_identity'
