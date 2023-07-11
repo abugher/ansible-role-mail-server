@@ -1,6 +1,6 @@
 ---
 - shell:                echo -n $(/usr/bin/openssl x509 -noout -fingerprint -sha256 -in "../../certificate-authority/hosts/{{ mail_client }}/cert.pem" | awk -F '=' '{print $2}') && echo " {{ mail_client }}.{{ domain }}"
-  with_items:           "{{ groups['mail_client'] }}"
+  with_items:           "{{ groups['mail-client'] }}"
   loop_control:
     loop_var:           'mail_client'
   register:             mail_client_fingerprints
