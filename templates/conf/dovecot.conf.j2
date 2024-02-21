@@ -37,6 +37,8 @@ service auth {
   }
 }
 
+auth_mechanisms = plain login
+
 ssl=required
 ssl_cert = </etc/ssl/certs/chain.pem
 ssl_key = </etc/ssl/private/{{ inventory_hostname }}.pem
