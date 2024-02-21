@@ -1,6 +1,7 @@
 install_packages:
   - 'postfix'
   - 'opendkim'
+  - 'dovecot-imapd'
 add_users_to_groups:
   - user:                       'opendkim'
     groups:
@@ -20,12 +21,32 @@ install_files:
     mode:                       '0640'
     src:                        "../../sensitive-ansible/roles/{{ role_name }}/files/dkim_keys/dkim_private.pem"
     dest:                       "/etc/ssl/private/{{ inventory_hostname }}.dkim.key"
+  - owner:                      'root'
+    group:                      'root'
+    mode:                       '0644'
+    src:                        'files/conf/master.cf'
+    dest:                       '/etc/postfix/master.cf'
 template_files:
+  - owner:                      'root'
+    group:                      'root'
+    mode:                       '0644'
+    src:                        'templates/conf/main.cf.j2'
+    dest:                       '/etc/postfix/main.cf'
+  - owner:                      'root'
+    group:                      'root'
+    mode:                       '0644'
+    src:                        'templates/conf/dovecot.conf.j2'
+    dest:                       '/etc/dovecot/dovecot.conf'
   - owner:                      'root'
     group:                      'root'
     mode:                       '0644'
     src:                        'templates/conf/relay_clientcerts.j2'
     dest:                       '/etc/postfix/relay_clientcerts'
+  - owner:                      'root'
+    group:                      'root'
+    mode:                       '0644'
+    src:                        'templates/conf/opendkim.conf.j2'
+    dest:                       '/etc/opendkim.conf'
   - owner:                      'root'
     group:                      'root'
     mode:                       '0644'
@@ -45,74 +66,9 @@ shell_commands_ignore_result:
   - user:                       'root'
     chdir:                      '/'
     command:                    postmap /etc/postfix/relay_clientcerts
-opendkim_conf:                  '/etc/opendkim.conf'
-lines_in_opendkim_conf:
-  - line:                       'Mode                    sv'
-    regexp:                     '^#{0,1} *Mode\s'
-  - line:                       'Socket                  inet:8891@localhost'
-    regexp:                     '^#{0,1} *Socket\s'
-  - line:                       "#ReportAddress           \"\""
-    regexp:                     '^#{0,1} *ReportAddress\s'
-  - line:                       "Domain                  {{ domain }}"
-    regexp:                     '^#{0,1} *Domain\s'
-  - line:                       "Subdomains              yes"
-    regexp:                     '^#{0,1} *Subdomains\s'
-  - line:                       'Selector                mail'
-    regexp:                     '^#{0,1} *Selector\s'
-  - line:                       'KeyTable                /etc/opendkim/keytable'
-    regexp:                     '^#{0,1} *KeyTable\s'
-  - line:                       'KeyFile                 /etc/ssl/private/{{ inventory_hostname }}.dkim.key'
-    regexp:                     '^#{0,1} *KeyFile\s'
-  - line:                       'SigningTable            refile:/etc/opendkim/signingtable'
-    regexp:                     '^#{0,1} *SigningTable\s'
-  - line:                       'InternalHosts           /etc/opendkim/internalhosts'
-    regexp:                     '^#{0,1} *InternalHosts\s'
-  - line:                       'ExternalIgnoreList      /etc/opendkim/internalhosts'
-    regexp:                     '^#{0,1} *ExternalIgnoreList\s'
-  - line:                       '#TrustAnchorFile         /usr/share/dns/root.key'
-    regexp:                     '^#{0,1} *TrustAnchorFile\s'
-  - line:                       'Canonicalization        relaxed/relaxed'
-    regexp:                     '^#{0,1} *Canonicalization\s'
-  - line:                       '#LogWhy                  yes'
-    regexp:                     '^#{0,1} *LogWhy\s'
-main_config:                    '/etc/postfix/main.cf'
-lines_in_main_config:
-  - line:                       "smtpd_tls_cert_file = /etc/ssl/certs/{{ inventory_hostname }}.pem"
-    regexp:                     '^#{0,1} *smtpd_tls_cert_file *='
-  - line:                       "smtpd_tls_key_file = /etc/ssl/private/{{ inventory_hostname }}.pem"
-    regexp:                     '^#{0,1} *smtpd_tls_key_file *='
-  - line:                       "myhostname = {{ inventory_hostname }}.{{ domain }}"
-    regexp:                     '^#{0,1} *myhostname *='
-  - line:                       "myorigin = {{ domain }}"
-    regexp:                     '^#{0,1} *myorigin *='
-  - line:                       "mydestination = {{ domain }}, {{ inventory_hostname }}, {{ inventory_hostname }}.{{ domain }}, localhost, localhost.{{ domain }}, localhost.localdomain"
-    regexp:                     '^#{0,1} *mydestination *='
-  - line:                       "smtpd_tls_security_level = encrypt"
-    regexp:                     '^#{0,1} *smtpd_tls_security_level *='
-  - line:                       "smtpd_tls_ask_ccert = yes"
-    regexp:                     '^#{0,1} *smtpd_tls_ask_ccert *='
-  - line:                       'relay_clientcerts = hash:/etc/postfix/relay_clientcerts'
-    regexp:                     '^#{0,1} *relay_clientcerts *='
-  - line:                       'smtpd_tls_fingerprint_digest = sha256'
-    regexp:                     '^#{0,1} *smtpd_tls_fingerprint_digest *='
-  - line:                       'inet_protocols = ipv4'
-    regexp:                     '^#{0,1} *inet_protocols *='
-  - line:                       'milter_default_action = accept'
-    regexp:                     '^#{0,1} *milter_default_action *='
-  - line:                       'milter_protocol = 2'
-    regexp:                     '^#{0,1} *milter_protocol *='
-  - line:                       'smtpd_milters = inet:127.0.0.1:8891'
-    regexp:                     '^#{0,1} *smtpd_milters *='
-  - line:                       'non_smtpd_milters = inet:127.0.0.1:8891'
-    regexp:                     '^#{0,1} *non_smtpd_milters *='
-  - line:                       'smtpd_relay_restrictions = permit_mynetworks permit_tls_clientcerts reject_unauth_destination'
-    regexp:                     '^#{0,1} *smtpd_relay_restrictions *='
-master_config:                  '/etc/postfix/master.cf'
-lines_in_master_config:
-  - line:                       'submission inet n       -       y       -       -       smtpd'
-    regexp:                     '^#{0,1} *submission[ $]'
 enable_services:
   - 'postfix'
   - 'opendkim'
+  - 'dovecot'
 start_services:                 "{{ enable_services }}"
 restart_services:               "{{ start_services }}"
