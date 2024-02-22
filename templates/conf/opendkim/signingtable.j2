@@ -1,2 +1,6 @@
-*@{{ domain }} key_for_mail
-*@*.{{ domain }} key_for_mail
+*@{{ domain }} key_for_{{ domain }}
+*@*.{{ domain }} key_for_{{ domain }}
+{% for alias in domain_aliases %}
+*@{{ alias }} key_for_{{ alias }}
+*@*.{{ alias }} key_for_{{ alias }}
+{% endfor %}

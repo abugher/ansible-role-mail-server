@@ -1,1 +1,4 @@
-key_for_mail {{ domain }}:mail:/etc/ssl/private/{{ inventory_hostname }}.dkim.key
+key_for_{{ domain }} {{ domain }}:mail:/etc/ssl/private/{{ inventory_hostname }}.dkim.key
+{% for alias in domain_aliases %}
+key_for_{{ alias }} {{ alias }}:mail:/etc/ssl/private/{{ inventory_hostname }}.dkim.key
+{% endfor %}

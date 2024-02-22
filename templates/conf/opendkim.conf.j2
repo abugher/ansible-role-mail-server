@@ -3,7 +3,6 @@ SyslogSuccess		yes
 Canonicalization        relaxed/relaxed
 Mode                    sv
 OversignHeaders		From
-Domain                  {{ domain }}
 Selector                mail
 KeyFile                 /etc/ssl/private/{{ inventory_hostname }}.dkim.key
 UserID			opendkim
