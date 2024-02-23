@@ -17,11 +17,18 @@ myhostname = {{ inventory_hostname }}.{{ domain }}
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
 myorigin = {{ domain }}
-mydestination = {{ domain }}, {{ inventory_hostname }}, {{ inventory_hostname }}.{{ domain }}, localhost, localhost.{{ domain }}, localhost.localdomain
+mydestination = {{ domain }}
 {%- for alias in domain_aliases %}
-{{ alias }}, {{ inventory_hostname }}.{{ alias }}, localhost.{{ alias }}
-{%- endfor +%}
+, {{ alias }}
+{%- endfor %}
+, {{ inventory_hostname }}, {{ inventory_hostname }}.{{ domain }}, localhost
 relayhost = 
+{#
+relay_domains = {{ domain }}
+{%- for alias in domain_aliases %}
+, {{ alias }}
+{%- endfor +%}
+#}
 mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 mailbox_size_limit = 5000000000
 recipient_delimiter = +
