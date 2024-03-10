@@ -73,7 +73,7 @@ template_files:
     mode:                       '0644'
     src:                        'templates/conf/opendkim/internalhosts.j2'
     dest:                       '/etc/opendkim/internalhosts'
-shell_commands_ignore_result:
+shell_commands_ignore_change:
   - user:                       'root'
     chdir:                      '/'
     command:                    postmap /etc/postfix/relay_clientcerts
