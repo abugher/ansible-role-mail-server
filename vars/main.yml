@@ -42,6 +42,8 @@ install_files:
     mode:                       '0644'
     src:                        'files/conf/aliases'
     dest:                       '/etc/aliases'
+commands:
+  - command:                    /usr/bin/newaliases
 template_files:
   - owner:                      'root'
     group:                      'root'
