@@ -1,0 +1,17 @@
+# /etc/aliases
+# These were found in place on the mail server in 2025.  The file was from 2014 and unowned by any package.  Change cautiously.
+# BEGIN
+mailer-daemon: postmaster
+postmaster: root
+nobody: root
+hostmaster: root
+usenet: root
+news: root
+webmaster: root
+www: root
+ftp: root
+abuse: root
+noc: root
+security: root
+root: root
+# END
