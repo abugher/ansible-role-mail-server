@@ -6,29 +6,24 @@ compatibility_level = 2
 smtpd_sasl_auth_enable = yes
 smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
-smtpd_tls_cert_file = /etc/ssl/certs/{{ inventory_hostname }}.pem
-smtpd_tls_key_file = /etc/ssl/private/{{ inventory_hostname }}.pem
+smtpd_tls_chain_files = /etc/ssl/private/{{ inventory_hostname }}.pem, /etc/ssl/certs/chain.pem
 smtpd_tls_security_level = encrypt
 smtp_tls_CApath=/etc/ssl/certs
 smtp_tls_security_level=may
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 smtpd_relay_restrictions = permit_sasl_authenticated, permit_mynetworks, permit_tls_clientcerts, reject_unauth_destination
 myhostname = {{ inventory_hostname }}.{{ domain }}
-alias_maps = hash:/etc/aliases
-alias_database = hash:/etc/aliases
 myorigin = {{ domain }}
 mydestination = {{ domain }}
 {%- for alias in domain_aliases %}
 , {{ alias }}
 {%- endfor %}
 , {{ inventory_hostname }}, {{ inventory_hostname }}.{{ domain }}, localhost
-relayhost = 
-{#
-relay_domains = {{ domain }}
-{%- for alias in domain_aliases %}
-, {{ alias }}
-{%- endfor +%}
-#}
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+transport_maps = hash:/var/lib/mailman3/data/postfix_lmtp
+local_recipient_maps = proxy:unix:passwd.byname $alias_maps hash:/var/lib/mailman3/data/postfix_lmtp
+relay_domains = hash:/var/lib/mailman3/data/postfix_domains
 mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 mailbox_size_limit = 5000000000
 recipient_delimiter = +
