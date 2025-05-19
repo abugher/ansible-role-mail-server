@@ -19,8 +19,8 @@ mydestination = {{ domain }}
 , {{ alias }}
 {%- endfor %}
 , {{ inventory_hostname }}, {{ inventory_hostname }}.{{ domain }}, localhost
-alias_maps = hash:/etc/aliases
-alias_database = hash:/etc/aliases
+alias_maps = hash:/etc/aliases, hash:/etc/postfix/external-aliases/list-aliases
+alias_database = hash:/etc/aliases, hash:/etc/postfix/external-aliases/list-aliases
 transport_maps = hash:/var/lib/mailman3/data/postfix_lmtp
 local_recipient_maps = proxy:unix:passwd.byname $alias_maps hash:/var/lib/mailman3/data/postfix_lmtp
 relay_domains = hash:/var/lib/mailman3/data/postfix_domains

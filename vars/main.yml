@@ -18,6 +18,16 @@ create_files:
     mode:                       '0640'
     state:                      'touch'
     path:                       '/var/mail/root'
+  - owner:                      'root'
+    group:                      'mail'
+    mode:                       '0755'
+    state:                      'directory'
+    path:                       '/etc/postfix/external-aliases'
+  - owner:                      'root'
+    group:                      'mail'
+    mode:                       '0640'
+    state:                      'touch'
+    path:                       '/etc/postfix/external-aliases/list-aliases'
 install_files:
   # I would prefer to just use the same host keys used by SSL web services,
   # signed by my internal CA, but those are all 4096 bit, and DKIM should be
