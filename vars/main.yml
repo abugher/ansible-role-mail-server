@@ -40,6 +40,11 @@ install_files:
   - owner:                      'root'
     group:                      'root'
     mode:                       '0644'
+    src:                        'files/conf/header_modifications'
+    dest:                       '/etc/postfix/header_modifications'
+  - owner:                      'root'
+    group:                      'root'
+    mode:                       '0644'
     src:                        'files/conf/aliases'
     dest:                       '/etc/aliases'
 commands:

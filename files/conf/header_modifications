@@ -1,0 +1,2 @@
+# Remove the Received: header indicating receipt by this mail server from a client.
+/^Received:/                            IGNORE
