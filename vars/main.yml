@@ -1,6 +1,7 @@
 install_packages:
   - 'postfix'
   - 'opendkim'
+  - 'postfix-policyd-spf-python'
   - 'dovecot-imapd'
 add_users_to_groups:
   - user:                       'opendkim'
