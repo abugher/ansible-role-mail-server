@@ -1,9 +1,12 @@
+smtp_users:
+  - 'nagios'
 install_packages:
   - 'postfix'
   - 'opendkim'
   - 'postfix-policyd-spf-python'
   - 'opendmarc'
   - 'dovecot-imapd'
+users:                          "{{ smtp_users }}"
 add_users_to_groups:
   - user:                       'opendkim'
     groups:
@@ -38,9 +41,9 @@ install_files:
   # I would prefer to just use the same host keys used by SSL web services,
   # signed by my internal CA, but those are all 4096 bit, and DKIM should be
   # restricted to 2048 bits.
-  - owner:                      'root'
-    group:                      'opendkim'
-    mode:                       '0640'
+  - owner:                      'opendkim'
+    group:                      'root'
+    mode:                       '0400'
     src:                        "../../sensitive-ansible/roles/{{ role_name }}/files/dkim_keys/dkim_private.pem"
     dest:                       "/etc/ssl/private/{{ inventory_hostname }}.dkim.key"
   - owner:                      'root'
