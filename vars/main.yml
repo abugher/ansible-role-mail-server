@@ -1,11 +1,12 @@
 smtp_users:
-  - 'nagios'
+  - 'nagios-notifications'
 install_packages:
   - 'postfix'
   - 'opendkim'
   - 'postfix-policyd-spf-python'
   - 'opendmarc'
   - 'dovecot-imapd'
+user_groups:                    "{{ smtp_users }}"
 users:                          "{{ smtp_users }}"
 add_users_to_groups:
   - user:                       'opendkim'
