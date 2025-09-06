@@ -1,15 +1,14 @@
-Syslog			yes
-SyslogSuccess		yes
+Syslog                  yes
+SyslogSuccess           yes
 Canonicalization        relaxed/relaxed
 Mode                    sv
-OversignHeaders		From
+OversignHeaders         From
 Selector                mail
 KeyFile                 /etc/ssl/private/{{ inventory_hostname }}.dkim.key
-UserID			opendkim
-UMask			007
-Socket			local:/run/opendkim/opendkim.sock
-Socket                  inet:8891@localhost
-PidFile			/run/opendkim/opendkim.pid
+UserID                  opendkim
+UMask                   007
+Socket                  local:/var/spool/postfix/opendkim/opendkim.sock
+PidFile                 /run/opendkim/opendkim.pid
 InternalHosts           /etc/opendkim/internalhosts
 Subdomains              yes
 KeyTable                /etc/opendkim/keytable

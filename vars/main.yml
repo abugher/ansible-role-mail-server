@@ -2,11 +2,16 @@ install_packages:
   - 'postfix'
   - 'opendkim'
   - 'postfix-policyd-spf-python'
+  - 'opendmarc'
   - 'dovecot-imapd'
 add_users_to_groups:
   - user:                       'opendkim'
     groups:
       - 'sslkey'
+  - user:                       'postfix'
+    groups:
+      - 'opendkim'
+      - 'opendmarc'
 create_files:
   - owner:                      'root'
     group:                      'root'
@@ -19,6 +24,16 @@ create_files:
     mode:                       '0640'
     state:                      'touch'
     path:                       '/var/mail/root'
+  - owner:                      'opendkim'
+    group:                      'opendkim'
+    mode:                       '0755'
+    state:                      'directory'
+    path:                       '/var/spool/postfix/opendkim'
+  - owner:                      'opendmarc'
+    group:                      'opendmarc'
+    mode:                       '0755'
+    state:                      'directory'
+    path:                       '/var/spool/postfix/opendmarc'
 install_files:
   # I would prefer to just use the same host keys used by SSL web services,
   # signed by my internal CA, but those are all 4096 bit, and DKIM should be
@@ -86,6 +101,11 @@ template_files:
     mode:                       '0644'
     src:                        'templates/conf/opendkim/internalhosts.j2'
     dest:                       '/etc/opendkim/internalhosts'
+  - owner:                      'root'
+    group:                      'root'
+    mode:                       '0644'
+    src:                        'templates/conf/opendmarc.conf.j2'
+    dest:                       '/etc/opendmarc.conf'
 shell_commands_ignore_change:
   - user:                       'root'
     chdir:                      '/'
@@ -93,6 +113,7 @@ shell_commands_ignore_change:
 enable_services:
   - 'postfix'
   - 'opendkim'
+  - 'opendmarc'
   - 'dovecot'
 start_services:                 "{{ enable_services }}"
 restart_services:               "{{ start_services }}"
