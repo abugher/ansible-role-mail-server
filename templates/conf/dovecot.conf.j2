@@ -1,13 +1,15 @@
-disable_plaintext_auth = no
-mail_privileged_group = mail
-mail_location = mbox:~/mail:INBOX=/var/mail/%u
+dovecot_config_version = 2.4.1
+dovecot_storage_version = 2.4.1
 
-userdb {
-  driver = passwd
+mail_privileged_group = mail
+mail_driver = mbox
+mail_path = ~/mail
+mail_inbox_path = /var/mail/%{user}
+
+userdb passwd {
 }
-passdb {
-  args = dovecot
-  driver = pam
+
+passdb pam {
 }
 
 protocols = " imap"
@@ -39,7 +41,7 @@ service auth {
 
 auth_mechanisms = plain login
 
-ssl=required
-ssl_cert = </etc/ssl/certs/chain.pem
-ssl_key = </etc/ssl/private/{{ inventory_hostname }}.pem
+ssl = required
+ssl_server_cert_file = /etc/ssl/certs/chain.pem
+ssl_server_key_file = /etc/ssl/private/{{ inventory_hostname }}.pem
 
