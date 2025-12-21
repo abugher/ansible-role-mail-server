@@ -119,5 +119,5 @@ enable_services:
   - 'opendkim'
   - 'opendmarc'
   - 'dovecot'
-start_services:                 "{{ enable_services }}"
 restart_services:               "{{ start_services }}"
+start_services:                 "{{ enable_services }}"
