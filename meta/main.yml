@@ -3,3 +3,6 @@ dependencies:
   - role:     'ssl-identity'
     tags:     
       - 'dependency'
+  - role:     'letsencrypt-client'
+    tags:     
+      - 'dependency'
