@@ -1,3 +1,3 @@
 #!/bin/bash
 
-/usr/sbin/service postfix restart
+sudo /usr/sbin/service postfix restart

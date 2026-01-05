@@ -1,0 +1,2 @@
+certbot ALL = (root) NOPASSWD: /usr/sbin/service postfix restart
+
