@@ -45,7 +45,7 @@ install_files:
   - owner:                      'opendkim'
     group:                      'root'
     mode:                       '0400'
-    src:                        "../../sensitive-ansible/roles/{{ role_name }}/files/dkim_keys/dkim_private.pem"
+    src:                        "sensitive/files/dkim_keys/dkim_private.pem"
     dest:                       "/etc/ssl/private/{{ inventory_hostname }}.dkim.key"
   - owner:                      'root'
     group:                      'root'
